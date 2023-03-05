@@ -2,7 +2,7 @@ from requests import get
 from bs4 import BeautifulSoup
 import pandas as pd
 import unicodedata
-# import unidecode
+import unidecode
 
 
 def get_game_suffix(date, team1, team2):

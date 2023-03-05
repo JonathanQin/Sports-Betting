@@ -1,0 +1,3 @@
+https://github.com/erilu/web-scraping-NBA-statistics
+https://github.com/swapnil-ahlawat/NBA_Game_Predictor
+https://github.com/vishaalagartha/basketball_reference_scraper
