@@ -12,9 +12,15 @@ except:
 
 def get_game_logs(_name, year, playoffs=False, ask_matches=True):
     name = lookup(_name, ask_matches)
-    suffix = get_player_suffix(name).replace('/', '%2F').replace('.html', '')
-    alpha_code = name.split(" ")[1][0]
-    name_code = name.split(" ")[1][0:5] + name[0:2]
+    if name == "":
+        print("No matches found")
+        return ""
+    # suffix = get_player_suffix(name).replace('/', '%2F').replace('.html', '')
+    alpha_code = name.split(" ")[-1][0]
+    if len(name.split(" ")[-1]) < 5:
+        name_code = name.split(" ")[-1] + name[0:2]
+    else:
+        name_code = name.split(" ")[-1][0:5] + name[0:2]
     r = get(f'https://www.basketball-reference.com/players/{alpha_code}/{name_code}01/gamelog-advanced/{year}')
     if r.status_code==200:
         soup = BeautifulSoup(r.content, 'html.parser')
