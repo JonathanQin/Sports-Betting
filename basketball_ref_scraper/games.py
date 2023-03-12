@@ -6,7 +6,7 @@ try:
     from constants import TEAM_TO_TEAM_ABBR, TEAM_SETS, MONTH_ABBR_TO_NUM
     from utils import remove_accents
 except:
-    from basketball_ref_scraper.constants import TEAM_TO_TEAM_ABBR, TEAM_SETS
+    from basketball_ref_scraper.constants import TEAM_TO_TEAM_ABBR, TEAM_SETS, MONTH_ABBR_TO_NUM
     from basketball_ref_scraper.utils import remove_accents
 
 
