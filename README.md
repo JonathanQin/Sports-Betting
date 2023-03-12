@@ -7,11 +7,9 @@ python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
 
-Data:
+Data: basketball reference (scraper), combination of team and player statistics
 
-Prediction Strategies:
+Prediction Strategies: distribution fitting, time series analysis, probability theory, bracket simulation
 
-Betting Strategies:
-
-Portfolio Structure:
+Betting Strategies: line shopping, kelly criterion
 
