@@ -18,7 +18,7 @@ class TeamDistribtuion:
             self.player_logs[player] = players.get_game_logs(player, year)
         # self.player_logs = pd.DataFrame.from_dict(self.player_logs)
         # self.player_logs.head()
-        # print(self.player_logs)
+        print(self.player_logs)
 
         
 team = TeamDistribtuion("ATL", 2022)
