@@ -32,10 +32,13 @@ class Dataset:
                     self.player_logs[player].to_csv(save_path + '/{}.csv'.format(player))
         
 if __name__ == "__main__":
+    team = "Golden State Warriors"
+    team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
     year = 2022
-    for team in CURR_NBA_TEAMS:
-        team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
-        Dataset(team_abbr, year)
+    Dataset(team_abbr, year)
+    # for team in CURR_NBA_TEAMS:
+    #     team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
+    #     Dataset(team_abbr, year)
                 
 
 
