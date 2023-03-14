@@ -21,7 +21,7 @@ class Dataset:
         self.save_data()
         
     def save_data(self):
-        save_path = 'data/{}_{}'.format(self.team, self.year)
+        save_path = 'data/NBA_{}/{}_{}'.format(self.year, self.team, self.year)
         if not os.path.exists(save_path):
             os.mkdir(save_path)
         self.team_logs.to_csv(save_path + '/team_logs.csv')
