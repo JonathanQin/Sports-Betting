@@ -8,7 +8,7 @@ class TeamStatistics:
 
 class Playoffs:
     def __init__(self, bracket, model):
-        self.num_teams = 9
+        self.num_teams = 8
         self.bracket = bracket
         self.best_of = 7
         self.model = model
