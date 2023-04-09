@@ -41,6 +41,7 @@ class TeamStatistics:
         # dictionary of games (date) -> relevant players
         self.game_players = self.player_of_games(self.team_logs, self.relevant_players, self.relevant_player_names)
         
+        # dataframe of weighted average statistics of relevant players for each game
         self.game_metrics = self.game_data(self.game_players, self.relevant_players, self.relevant_player_names, self.player_weights)
 
     # extract players with data from roster list
@@ -99,7 +100,7 @@ class TeamStatistics:
         return game_players
     
     # game stats aggregation weighted by relevant player contribution
-    def game_data(self, games, players, player_names, weights):
+    def game_data(self, games, players, player_names, total_weights):
         game_stats = pd.DataFrame(columns = self.metrics)
         for date in games.keys():
             # get player stats for each game
@@ -112,15 +113,27 @@ class TeamStatistics:
                     if player_names[i] == player:
                         player_stats.append(players[i].metrics_data[players[i].metrics_data["DATE"] == date])
                         player_weights.append(float(players[i].metrics_data[players[i].metrics_data["DATE"] == date]["MP"]))
-                        game_weight += weights[i]
+                        game_weight += total_weights[i]
             # weight of players in particular game
             player_weights = [weight/sum(player_weights) for weight in player_weights]
             stats = pd.concat(player_stats)
-            stats = stats.groupby(["DATE"])
-            # weighted_stats = stats.agg({self.metrics: lambda x: (x * player_weights).sum()})
-            # print(weighted_stats)
-                    
-                    
+            weighted_stats = []
+            for i in range(len(stats)):
+                for j in range(len(self.metrics)):
+                    if i == 0:
+                        if self.metrics[j] == ("DATE" or "MP"):
+                            weighted_stats.append(stats.iloc[i][j])
+                        else:
+                            weighted_stats.append(stats.iloc[i][j] * player_weights[i])
+                    else:
+                        if self.metrics[j] == "DATE":
+                            pass
+                        elif self.metrics[j] == "MP":
+                            weighted_stats[j] += stats.iloc[i][j]
+                        else:
+                            weighted_stats[j] += (stats.iloc[i][j] * player_weights[i])
+            game_stats.loc[len(game_stats)] = weighted_stats
+        return game_stats                   
         
     
     # preprocess team_logs data
