@@ -1,3 +1,7 @@
+PLAYER_METRICS = ['DATE', 'AGE', 'TEAM', 'HOME/AWAY', 'OPPONENT', 'RESULT', 'GS', 'MP',
+       'TS%', 'eFG%', 'ORB%', 'DRB%', 'TRB%', 'AST%', 'STL%', 'BLK%', 'TOV%',
+       'USG%', 'ORtg', 'DRtg', 'GAME_SCORE', 'BPM']
+
 CURR_NBA_TEAMS = [
         'Atlanta Hawks', 
         'Boston Celtics', 
