@@ -31,8 +31,12 @@ class TeamStatistics:
 
         self.relevant_player_names = [player.name for player in self.relevant_players]
         
+        # user metrics that make sense
+        self.metrics = metrics
+        self.metrics = ['DATE', 'MP', 'USG%', 'ORtg', 'DRtg', 'GAME_SCORE', 'BPM']
+        
         # get specific player metrics
-        self.select_metrics(self.relevant_players, metrics)
+        self.select_metrics(self.relevant_players, self.metrics)
 
         # dictionary of games (date) -> relevant players
         self.game_players = self.player_of_games(self.team_logs, self.relevant_players, self.relevant_player_names)
@@ -94,20 +98,28 @@ class TeamStatistics:
             game_players[team_logs["DATE"][i]] = relevant_players
         return game_players
     
+    # game stats aggregation weighted by relevant player contribution
     def game_data(self, games, players, player_names, weights):
+        game_stats = pd.DataFrame(columns = self.metrics)
         for date in games.keys():
             # get player stats for each game
             # players_id = []
             player_stats = []
             player_weights = []
+            game_weight = 0 # weight of the game given "weight" of relevant players participating
             for player in games[date]:
                 for i in range(len(player_names)):
                     if player_names[i] == player:
-                        # players_id.append(i)
                         player_stats.append(players[i].metrics_data[players[i].metrics_data["DATE"] == date])
-                        player_weights.append(weights[i])
-            game_weight = sum(player_weights)
-            player_weights = [weight/game_weight for weight in player_weights]
+                        player_weights.append(float(players[i].metrics_data[players[i].metrics_data["DATE"] == date]["MP"]))
+                        game_weight += weights[i]
+            # weight of players in particular game
+            player_weights = [weight/sum(player_weights) for weight in player_weights]
+            stats = pd.concat(player_stats)
+            stats = stats.groupby(["DATE"])
+            # weighted_stats = stats.agg({self.metrics: lambda x: (x * player_weights).sum()})
+            # print(weighted_stats)
+                    
                     
         
     
