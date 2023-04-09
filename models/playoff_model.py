@@ -2,10 +2,6 @@ import numpy as np
 import pandas as pd
 import math
 
-class TeamStatistics:
-    def __init__(self, team_name, year):
-        pass
-
 class Playoffs:
     def __init__(self, bracket, model):
         self.num_teams = 8
