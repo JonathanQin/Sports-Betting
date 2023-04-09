@@ -26,7 +26,9 @@ class TeamStatistics:
         self.players = self.get_players(self.roster, self.data_path)
         
         # extract relevant players, data
-        self.relevant_players = self.compute_relevant(self.players, num_relevant)
+        self.relevant_players, player_weights = self.compute_relevant(self.players, num_relevant)
+        self.player_weights = [weight / sum(player_weights) for weight in player_weights]
+
         self.relevant_player_names = [player.name for player in self.relevant_players]
         
         # get specific player metrics
@@ -34,6 +36,8 @@ class TeamStatistics:
 
         # dictionary of games (date) -> relevant players
         self.game_players = self.player_of_games(self.team_logs, self.relevant_players, self.relevant_player_names)
+        
+        self.game_metrics = self.game_data(self.game_players, self.relevant_players, self.relevant_player_names, self.player_weights)
 
     # extract players with data from roster list
     def get_players(self, roster, data_path):
@@ -71,7 +75,7 @@ class TeamStatistics:
             player_relevance.append(minutes_played)
         combined = sorted(zip(players, player_relevance), key=lambda x: x[1], reverse=True)
         players, player_relevance = zip(*combined)
-        return players[:num_relevant]
+        return players[:num_relevant], player_relevance[:num_relevant]
     
     # select a particular set of metrics 
     def select_metrics(self, players, metrics):
@@ -89,6 +93,23 @@ class TeamStatistics:
                     relevant_players.append(player_names[j])
             game_players[team_logs["DATE"][i]] = relevant_players
         return game_players
+    
+    def game_data(self, games, players, player_names, weights):
+        for date in games.keys():
+            # get player stats for each game
+            # players_id = []
+            player_stats = []
+            player_weights = []
+            for player in games[date]:
+                for i in range(len(player_names)):
+                    if player_names[i] == player:
+                        # players_id.append(i)
+                        player_stats.append(players[i].metrics_data[players[i].metrics_data["DATE"] == date])
+                        player_weights.append(weights[i])
+            game_weight = sum(player_weights)
+            player_weights = [weight/game_weight for weight in player_weights]
+                    
+        
     
     # preprocess team_logs data
     def process_team_logs(self):
