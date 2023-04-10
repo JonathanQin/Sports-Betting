@@ -33,7 +33,7 @@ class TeamStatistics:
         
         # user metrics that make sense
         self.metrics = metrics
-        self.metrics = ['DATE', 'MP', 'USG%', 'ORtg', 'DRtg', 'GAME_SCORE', 'BPM']
+        # self.metrics = ['DATE', 'MP', 'USG%', 'ORtg', 'DRtg', 'GAME_SCORE', 'BPM']
         
         # get specific player metrics
         self.select_metrics(self.relevant_players, self.metrics)
@@ -102,6 +102,7 @@ class TeamStatistics:
     # game stats aggregation weighted by relevant player contribution
     def game_data(self, games, players, player_names, total_weights):
         game_stats = pd.DataFrame(columns = self.metrics)
+        game_drops = []
         for date in games.keys():
             # get player stats for each game
             # players_id = []
@@ -116,6 +117,9 @@ class TeamStatistics:
                         game_weight += total_weights[i]
             # weight of players in particular game
             player_weights = [weight/sum(player_weights) for weight in player_weights]
+            if len(player_stats) == 0:
+                game_drops.append(date)
+                continue
             stats = pd.concat(player_stats)
             weighted_stats = []
             for i in range(len(stats)):
@@ -133,6 +137,8 @@ class TeamStatistics:
                         else:
                             weighted_stats[j] += (stats.iloc[i][j] * player_weights[i])
             game_stats.loc[len(game_stats)] = weighted_stats
+        for date in game_drops:
+            self.team_logs = self.team_logs[self.team_logs["DATE"] != date]
         return game_stats                   
         
     
@@ -146,8 +152,9 @@ class TeamStatistics:
             date = format_time(self.team_logs["YEAR"][i], self.team_logs["MONTH"][i], self.team_logs["DAY"][i])
             self.team_logs.loc[i,"DATE"] = date
     
-            
-team = TeamStatistics("Golden State Warriors", 2022)
+num_relevant = 7
+player_metrics = ['DATE', 'MP', 'USG%', 'ORtg', 'DRtg', 'GAME_SCORE', 'BPM']
+team = TeamStatistics("Golden State Warriors", 2022, num_relevant, player_metrics)
 
 # old function implementations
 

@@ -54,17 +54,17 @@ if __name__ == "__main__":
     # team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
     # year = 2022
     # Dataset(team_abbr, year)
-    counter = 0
+    counter = 8
     
     while True:
         team = CURR_NBA_TEAMS[counter]
         team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
-        year = 2015
-        PlayoffSet(team_abbr, year)
+        year = 2022
+        Dataset(team_abbr, year)
         counter = (counter + 1)%30
         if(team == "Washington Wizards"):
             break
-        # time.sleep(1 * 30 * 60)  # 1 hours in seconds
+        time.sleep(1 * 30 * 60)  # 1 hours in seconds
     # for team in CURR_NBA_TEAMS:
     #     team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
     #     Dataset(team_abbr, year)
