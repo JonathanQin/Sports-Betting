@@ -1,37 +1,52 @@
 import numpy as np
 import pandas as pd
 import math
+import sys
+sys.path.append('/Users/jonat/OneDrive - University of Southern California/Documents/USC/Quant/Sports Betting/Sports-Betting')
+from basketball_ref_scraper.constants import TEAM_TO_TEAM_ABBR
+from basketball_ref_scraper.constants import CURR_NBA_TEAMS
+from team_model import TeamStatistics
+
+# num series won, # games per series
+PLAYOFFS_2022 = {
+    'MIA' : 2,
+    'ATL' : 0,
+    'PHI' : 1,
+    'TOR' : 0,
+    'MIL' : 1,
+    'CHI' : 0,
+    'BOS' : 3,
+    'BRK' : 0,
+    'PHO' : 1,
+    'NOP' : 0,
+    'DAL' : 2,
+    'UTA' : 0,
+    'GSW' : 4,
+    'DEN' : 0,
+    'MEM' : 1,
+    'MIN' : 0,
+}
+
+# margin of victory
+# num of games margin of victory
+# team strength and seeding
+# depth of run
 
 class Playoffs:
-    def __init__(self, bracket, model):
-        self.num_teams = 8
+    def __init__(self, bracket):
+        self.num_teams = 16
         self.bracket = bracket
-        self.best_of = 7
-        self.model = model
+        self.data_path = 'data\NBA_playoffs_2022'
+        self.teams = self.load()
         
     # simulates a particular level of a bracket of 2^i teams playing a best of n
-    def simulate_round(self, round_teams, model):
-        num_games = math.log(len(round_teams), 2)
-        results = []
-        winners = []
-        if not num_games.is_integer():
-            raise ValueError("Teams in play must be a power of 2")
-        for i in range(num_games):
-            team_A = round_teams[i*2]
-            team_B = round_teams[i*2 + 1]
-            winner, win_probability, point_spread, over_under = model(team_A, team_B, self.best_of)
-            winners.append(winner)
-            results.append([winner, win_probability, point_spread, over_under])
-        self.result_display(results)
-        return winners
-    
-    # prints out / saves simulation results for analysis
-    def result_display(self, results):
-        pass
+    def load(self):
+        playoff_log = {}
+        teams = self.bracket.keys()
+        series = self.bracket.values()
+        for i in range(self.num_teams):
+            for j in range(series[i] + 1):
+                
+            
         
-class Model:
-    def __init__(self, team_A, team_B, best_of = 7):
-        self.num_games = best_of
-        self.team_A = team_A
-        self.team_B = team_B
-    
+playoffs_2022 = Playoffs(PLAYOFFS_2022)

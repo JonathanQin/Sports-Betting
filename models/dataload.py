@@ -27,6 +27,7 @@ class DataLoad:
     def load(self, year):
         for i in range(self.num_teams):
             team_abbr = TEAM_TO_TEAM_ABBR[CURR_NBA_TEAMS[i].upper()]
+            print("Getting data for {}".format(team_abbr))
             team = TeamStatistics(team_abbr, year, num_relevant=7, metrics = self.metrics)
             self.team_sequence[team_abbr] = self.get_team(team)
         

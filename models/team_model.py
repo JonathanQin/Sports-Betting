@@ -42,8 +42,8 @@ class TeamStatistics:
         self.game_players = self.player_of_games(self.team_logs, self.relevant_players, self.relevant_player_names)
         
         # dataframe of weighted average statistics of relevant players for each game
-        self.game_metrics = self.game_data(self.game_players, self.relevant_players, self.relevant_player_names, self.player_weights)
-
+        self.game_metrics, self.game_weights = self.game_data(self.game_players, self.relevant_players, self.relevant_player_names, self.player_weights)
+        
     # extract players with data from roster list
     def get_players(self, roster, data_path):
         players = []
@@ -103,6 +103,7 @@ class TeamStatistics:
     def game_data(self, games, players, player_names, total_weights):
         game_stats = pd.DataFrame(columns = self.metrics)
         game_drops = []
+        game_weights = []
         for date in games.keys():
             # get player stats for each game
             # players_id = []
@@ -137,9 +138,10 @@ class TeamStatistics:
                         else:
                             weighted_stats[j] += (stats.iloc[i][j] * player_weights[i])
             game_stats.loc[len(game_stats)] = weighted_stats
+            game_weights.append(game_weight)
         for date in game_drops:
             self.team_logs = self.team_logs[self.team_logs["DATE"] != date]
-        return game_stats                   
+        return game_stats, game_weights                   
         
     
     # preprocess team_logs data
