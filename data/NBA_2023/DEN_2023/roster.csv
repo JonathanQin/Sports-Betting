@@ -1,0 +1,18 @@
+,NUMBER,PLAYER,POS,HEIGHT,WEIGHT,BIRTH_DATE,NATIONALITY,EXPERIENCE,COLLEGE
+0,11.0,Bruce Brown,SG,6-4,202,1996-08-15,US,4,Miami (FL)
+1,5.0,Kentavious Caldwell-Pope,SG,6-5,204,1993-02-18,US,9,Georgia
+2,0.0,Christian Braun,SG,6-7,218,2001-04-17,US,R,Kansas
+3,15.0,Nikola Jokić,C,6-11,284,1995-02-19,RS,7,
+4,50.0,Aaron Gordon,PF,6-8,235,1995-09-16,US,8,Arizona
+5,27.0,Jamal Murray,PG,6-3,215,1997-02-23,CA,5,Kentucky
+6,1.0,Michael Porter Jr.,SF,6-10,218,1998-06-29,US,3,Missouri
+7,31.0,Vlatko Čančar,PF,6-8,236,1997-04-10,SI,3,
+8,32.0,Jeff Green,PF,6-8,235,1986-08-28,US,14,Georgetown
+9,22.0,Zeke Nnaji,PF,6-9,240,2001-01-09,US,2,Arizona
+10,14.0,Ish Smith,PG,6-0,175,1988-07-05,US,12,Wake Forest
+11,6.0,DeAndre Jordan,C,6-11,265,1988-07-21,US,14,Texas A&M
+12,8.0,Peyton Watson,SG,6-8,200,2002-09-11,US,R,UCLA
+13,13.0,Thomas Bryant,C,6-10,248,1997-07-31,US,5,Indiana
+14,10.0,Jack White (TW),SF,6-7,225,1997-08-05,AU,R,Duke
+15,7.0,Reggie Jackson,PG,6-2,208,1990-04-16,IT,11,Boston College
+16,,Collin Gillespie (TW),PG,6-3,195,1999-06-25,US,R,Villanova
