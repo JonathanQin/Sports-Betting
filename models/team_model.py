@@ -43,6 +43,7 @@ class TeamStatistics:
         
         # dataframe of weighted average statistics of relevant players for each game
         self.game_metrics, self.game_weights = self.game_data(self.game_players, self.relevant_players, self.relevant_player_names, self.player_weights)
+        print("Done")
         
     # extract players with data from roster list
     def get_players(self, roster, data_path):
@@ -72,8 +73,8 @@ class TeamStatistics:
     # find relevant players, remove others by game participation
     def compute_relevant(self, players, num_relevant = 7):
         player_relevance = []
-        if len(players) <= num_relevant:
-            return players    
+        if len(players) < num_relevant:
+            num_relevant = len(players)   
         for i in range(len(players)):
             games_played = len(players[i].data)
             minutes_played = sum(players[i].data["MP"])
