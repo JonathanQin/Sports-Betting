@@ -36,15 +36,19 @@ class DataLoad:
         for i in range(len(team_obj.game_metrics)):
             selected_player_data = team_obj.game_metrics.loc[i, self.metrics].tolist()
             selected_game_row = team_obj.team_logs[team_obj.team_logs["DATE"] == team_obj.game_metrics.loc[i, "DATE"]]
-            selected_game_data = list(selected_game_row[self.game_metrics])
+            selected_game_data = selected_game_row[self.game_metrics].values.ravel()
+            
             # spread = [team_obj.team_logs.loc[i, "POINTS_SCORED"] - team_obj.team_logs.loc[i, "OPPONENT_POINTS"]]
             # total = [team_obj.team_logs.loc[i, "POINTS_SCORED"] + team_obj.team_logs.loc[i, "OPPONENT_POINTS"]]
             # data.append(selected_player_data + selected_game_data + spread + total) 
-            data.append(selected_player_data + selected_game_data) 
-        print(len(data))
+            data.append(selected_player_data + list(selected_game_data)) 
         return data
 
 player_metrics = ['DATE', 'MP', 'USG%', 'ORtg', 'DRtg', 'GAME_SCORE', 'BPM']
 game_metrics = ["HOME", "STREAK", "POINTS_SCORED", "OPPONENT_POINTS", "OUTCOME"]
 data = DataLoad(2022, player_metrics, game_metrics)
+print(type(data.team_sequence["GSW"]), data.team_sequence["GSW"])
+
+
+
     
