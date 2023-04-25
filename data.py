@@ -54,7 +54,7 @@ if __name__ == "__main__":
     # team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
     # year = 2022
     # Dataset(team_abbr, year)
-    counter = 11
+    counter = 10
     
     while True:
         team = CURR_NBA_TEAMS[counter]
