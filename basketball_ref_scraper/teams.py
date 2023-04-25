@@ -50,7 +50,7 @@ def get_roster_original(team, season_end_year):
 
     return df
 
-def get_team_stats(season_end_year):
+def get_team_stats_old(season_end_year):
     r = get(
         f'https://www.basketball-reference.com/leagues/NBA_{season_end_year}.html')
     merged_df = None
@@ -64,9 +64,65 @@ def get_team_stats(season_end_year):
         advanced_stats_df.columns = advanced_stats_df.columns.droplevel(0)
 
         advanced_stats_df['Team'] = advanced_stats_df['Team'].str.replace("\*", '')
+        per_game_df_100['Team'] = per_game_df_100['Team'].str.replace('\*', '')
+        opp_per_game_df_100['Team'] = opp_per_game_df_100['Team'].str.replace('\*', '')
+        opp_per_game_df_100.columns = opp_per_game_df_100.columns.str.replace('Opp', '')
+        opp_per_game_df_100 = opp_per_game_df_100.rename(columns=lambda x: 'opp_' + x)
+        opp_per_game_df_100 = opp_per_game_df_100.rename(columns={'opp_Team': 'Team'})
+
+        advanced_stats_df.drop(['Rk'], axis=1, inplace=True)
+        advanced_stats_df.drop(['Arena'], axis=1, inplace=True)
+        advanced_stats_df.drop(['Attend./G'], axis=1, inplace=True)
+        advanced_stats_df.drop(['Unnamed: 22_level_1'], axis=1, inplace=True)
+        advanced_stats_df.drop(['Unnamed: 27_level_1'], axis=1, inplace=True)
+        advanced_stats_df.drop(['Unnamed: 17_level_1'], axis=1, inplace=True)
+        advanced_stats_df.drop(30)
+        opp_per_game_df_100.drop(['opp_Rk'], axis=1, inplace=True)
+        per_game_df_100.drop(['Rk'], axis=1, inplace=True)
+
+        merged_df = pd.merge(advanced_stats_df, per_game_df_100, on='Team')
+        merged_df = pd.merge(merged_df, opp_per_game_df_100, on='Team')
+        merged_df = merged_df.rename(columns={'Team': 'TEAM'})
+        merged_df['TEAM'] = merged_df['TEAM'].apply(lambda x: TEAM_TO_TEAM_ABBR[x.upper()] + "_" +str(season_end_year))
+
+    return merged_df
+
+def get_playoff_wins_old(season_end_year):
+    r = get(
+        f'https://www.basketball-reference.com/playoffs/NBA_{season_end_year}.html')
+    df = None
+    if r.status_code == 200:
+        soup = BeautifulSoup(r.content, 'html.parser')
+        table = soup.find_all('table')
+        df = pd.read_html(str(table))[-1]
+        df.columns = df.columns.droplevel(0)
+        df = df[['Tm', 'W']]
+        df.columns = ['TEAM', 'PLAYOFF_WINS']
+        df = df.drop(16)
+        df['TEAM'] = df['TEAM'].apply(lambda x: TEAM_TO_TEAM_ABBR[x.upper()] + "_" +str(season_end_year))
+    return df
+
+
+def get_team_stats(season_end_year):
+    r = get(
+        f'https://www.basketball-reference.com/leagues/NBA_{season_end_year}.html')
+    merged_df = None
+    if r.status_code == 200:
+        soup = BeautifulSoup(r.content, 'html.parser')
+        table = soup.find('table', attrs={'id': 'per_poss-team'})
+        per_game_df_100 = pd.read_html(str(table))[0]
+
+        table = soup.find('table', attrs={'id': 'per_poss-opponent'})
+        opp_per_game_df_100 = pd.read_html(str(table))[0]
+
+        table = soup.find('table', attrs={'id': 'advanced-team'})
+        advanced_stats_df = pd.read_html(str(table))[0]
+
+        advanced_stats_df.columns = advanced_stats_df.columns.droplevel(0)
+
+        advanced_stats_df['Team'] = advanced_stats_df['Team'].str.replace("\*", '')
         per_game_df_100['Team'] = advanced_stats_df['Team'].str.replace('\*', '')
         opp_per_game_df_100['Team'] = advanced_stats_df['Team'].str.replace('\*', '')
-        opp_per_game_df_100.columns = opp_per_game_df_100.columns.str.replace('Opp', '')
         opp_per_game_df_100 = opp_per_game_df_100.rename(columns=lambda x: 'opp_' + x)
         opp_per_game_df_100 = opp_per_game_df_100.rename(columns={'opp_Team': 'Team'})
 
@@ -76,7 +132,7 @@ def get_team_stats(season_end_year):
         advanced_stats_df.drop(['Unnamed: 22_level_1'], axis=1, inplace=True)
         advanced_stats_df.drop(['Unnamed: 27_level_1'], axis=1, inplace=True)
         advanced_stats_df.drop(['Unnamed: 17_level_1'], axis=1, inplace=True)
-        advanced_stats_df.drop(30)
+        advanced_stats_df.drop(advanced_stats_df.index[-1], inplace=True)
         opp_per_game_df_100.drop(['opp_Rk'], axis=1, inplace=True)
         per_game_df_100.drop(['Rk'], axis=1, inplace=True)
 
@@ -93,16 +149,19 @@ def get_playoff_wins(season_end_year):
     df = None
     if r.status_code == 200:
         soup = BeautifulSoup(r.content, 'html.parser')
-        table = soup.find_all('table')
-        df = pd.read_html(str(table))[-1]
+        table = soup.find('table', attrs={'id': 'advanced-team'})
+        df = pd.read_html(str(table))[0]
         df.columns = df.columns.droplevel(0)
-        df = df[['Tm', 'W']]
+        try:
+            df = df[['Tm', 'W']]
+        except:
+            df = df[['Team', 'W']]
         df.columns = ['TEAM', 'PLAYOFF_WINS']
-        df = df.drop(16)
+        df.drop(df.index[-1], inplace=True)
         df['TEAM'] = df['TEAM'].apply(lambda x: TEAM_TO_TEAM_ABBR[x.upper()] + "_" +str(season_end_year))
     return df
     
 
 if __name__ == '__main__':
-    print(get_playoff_wins(2022))
-    print(get_team_stats(2022))
+    print(get_team_stats(2000))
+    print(get_playoff_wins(2000))

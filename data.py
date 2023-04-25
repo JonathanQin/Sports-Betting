@@ -5,6 +5,9 @@ from basketball_ref_scraper.teams import get_roster
 from basketball_ref_scraper.games import get_games
 from basketball_ref_scraper.players import get_game_logs
 from basketball_ref_scraper.games import get_games_playoffs
+from basketball_ref_scraper.teams import get_team_stats
+from basketball_ref_scraper.teams import get_playoff_wins
+
 
 import numpy as np
 import pandas as pd
@@ -48,7 +51,29 @@ class PlayoffSet:
                 os.mkdir(save_path)
             self.team_logs.to_csv(save_path + '/team_logs.csv')
 
+class TeamSet:
+    def __init__(self, year):
+        self.year = year
+        self.team_stats = get_team_stats(year)
+        self.playoff_wins = get_playoff_wins(year)
+        if self.team_stats is not None:
+            save_path = 'data/NBA_team_stats/{}'.format(self.year)
+            os.makedirs(save_path, exist_ok=True)
+            self.team_stats.to_csv(save_path + '/team_stats.csv')
+        if self.playoff_wins is not None:
+            save_path = 'data/NBA_playoff_wins/{}'.format(self.year)
+            os.makedirs(save_path, exist_ok=True)
+            self.playoff_wins.to_csv(save_path + '/playoff_wins.csv')
+        else:
+            print("failed")
+
+if __name__ == "__main__":
+    for year in range(2013, 2024):
+        print(year)
+        TeamSet(year)
         
+
+"""
 if __name__ == "__main__":
     # team = "New York Knicks"
     # team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
@@ -68,3 +93,4 @@ if __name__ == "__main__":
     # for team in CURR_NBA_TEAMS:
     #     team_abbr = TEAM_TO_TEAM_ABBR[team.upper()]
     #     Dataset(team_abbr, year)
+"""        
