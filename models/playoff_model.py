@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import math
 import sys
+import os
 sys.path.append('/Users/jonat/OneDrive - University of Southern California/Documents/USC/Quant/Sports Betting/Sports-Betting')
 from basketball_ref_scraper.constants import TEAM_TO_TEAM_ABBR
 from basketball_ref_scraper.constants import CURR_NBA_TEAMS
@@ -36,7 +37,7 @@ class Playoffs:
     def __init__(self, bracket):
         self.num_teams = 16
         self.bracket = bracket
-        self.data_path = 'data\NBA_playoffs_2022'
+        self.data_path = 'data/NBA_playoffs_2022'
         self.teams = self.load()
         
     # simulates a particular level of a bracket of 2^i teams playing a best of n
@@ -46,7 +47,14 @@ class Playoffs:
         series = self.bracket.values()
         for i in range(self.num_teams):
             for j in range(series[i] + 1):
+                pass
                 
             
         
-playoffs_2022 = Playoffs(PLAYOFFS_2022)
+# print([name for name in os.listdir('data/NBA_playoffs_2022')])
+
+for name in os.listdir('data/NBA_playoffs_2022'):
+    file_name = 'data/NBA_playoffs_2022/' + name + '/team_logs.csv'
+    file = pd.read_csv(file_name)
+    print(file)
+    

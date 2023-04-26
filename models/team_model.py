@@ -3,7 +3,7 @@ import pandas as pd
 import math
 import os
 import sys
-from player_model import Player
+from models.player_model import Player
 from datetime import datetime
 
 sys.path.append('/Users/jonat/OneDrive - University of Southern California/Documents/USC/Quant/Sports Betting/Sports-Betting')
@@ -17,11 +17,13 @@ class TeamStatistics:
             team_name = TEAM_TO_TEAM_ABBR[team_name.upper()]
         self.team_name = team_name
         self.year = year
+        if (self.team_name == "HOU" and year == 2023):
+            self.year = 2022
+            year = 2022
         self.data_path = 'data/NBA_{}/{}_{}'.format(year, self.team_name, year)
         self.roster = pd.read_csv(self.data_path + '/roster.csv').drop("Unnamed: 0", axis = 1)
         self.team_logs = (pd.read_csv(self.data_path + '/team_logs.csv')).drop("Unnamed: 0", axis = 1)
         self.process_team_logs()
-        
         # list / dictionary of player objects
         self.players = self.get_players(self.roster, self.data_path)
         
@@ -130,14 +132,20 @@ class TeamStatistics:
                         if self.metrics[j] == ("DATE" or "MP"):
                             weighted_stats.append(stats.iloc[i][j])
                         else:
-                            weighted_stats.append(stats.iloc[i][j] * player_weights[i])
+                            res = stats.iloc[i][j]
+                            if math.isnan(res):
+                                res = 0
+                            weighted_stats.append(res * player_weights[i])
                     else:
                         if self.metrics[j] == "DATE":
                             pass
                         elif self.metrics[j] == "MP":
                             weighted_stats[j] += stats.iloc[i][j]
                         else:
-                            weighted_stats[j] += (stats.iloc[i][j] * player_weights[i])
+                            res = stats.iloc[i][j]
+                            if math.isnan(res):
+                                res = 0
+                            weighted_stats[j] += (res * player_weights[i])
             game_stats.loc[len(game_stats)] = weighted_stats
             game_weights.append(game_weight)
         for date in game_drops:
